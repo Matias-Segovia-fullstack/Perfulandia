@@ -19,10 +19,10 @@
     <modules>
         <module>msvc-usuario</module>
         <module>msvc-invetario</module>
-        <module>msvc-carrito</module>
+        <module>msvc-sucursal</module>
         <module>msvc-boleta</module>
-        <module>msvc-proveedores</module>
-        <module>msvc-direccion</module>
+        <module>msvc-detalleBoleta</module>
+        <module>msvc-producto</module>
     </modules>
 
     <properties>
