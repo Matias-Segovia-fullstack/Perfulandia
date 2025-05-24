@@ -8,7 +8,7 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<groupId>com.Perfulandia.msvc.inventario</groupId>
-	<artifactId>msvc-invetario</artifactId>
+	<artifactId>msvc-inventario</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>msvc-invetario</name>
 	<description>Demo project for Spring Boot</description>
