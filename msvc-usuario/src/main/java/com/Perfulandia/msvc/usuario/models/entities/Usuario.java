@@ -13,11 +13,11 @@ import lombok.*;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idUsuario;
+    private Long idUsuario;
 
     @Column(nullable = false)
     @NotBlank(message = "El nombre es obligatorio")
-    private String nombre;
+    private String nombreUsuario;
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Debe ingresar Rut")
