@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface DetalleBoletaService {
     DetalleBoleta guardar(DetalleBoleta detalle);
-    List<DetalleBoleta> listarPorBoleta(Long boletaId);
+    List<DetalleBoleta> listarPorBoleta(Long idBoleta);
     Optional<DetalleBoleta> obtener(Long id);
     boolean eliminar(Long id);
 }
+

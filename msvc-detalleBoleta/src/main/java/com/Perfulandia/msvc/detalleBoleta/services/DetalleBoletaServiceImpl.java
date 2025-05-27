@@ -22,7 +22,6 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
     @Override
     public DetalleBoleta guardar(DetalleBoleta detalle) {
         ProductoDTO producto = productoClient.obtenerProducto(detalle.getProductoId());
-
         if (producto == null) {
             throw new RuntimeException("Producto no encontrado con ID: " + detalle.getProductoId());
         }
@@ -32,8 +31,8 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
     }
 
     @Override
-    public List<DetalleBoleta> listarPorBoleta(Long boletaId) {
-        return repository.findByBoletaId(boletaId);
+    public List<DetalleBoleta> listarPorBoleta(Long idBoleta) {
+        return repository.findByIdBoleta(idBoleta);
     }
 
     @Override
@@ -50,3 +49,4 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
         return false;
     }
 }
+

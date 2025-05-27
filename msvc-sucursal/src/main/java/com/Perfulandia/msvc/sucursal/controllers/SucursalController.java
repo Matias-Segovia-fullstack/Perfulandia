@@ -27,7 +27,7 @@ public class SucursalController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sucursal> findById(@PathVariable Long id) {
+    public ResponseEntity<Sucursal> findById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(sucursalService.findById(id));
     }
 

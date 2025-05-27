@@ -2,35 +2,29 @@ package com.Perfulandia.msvc.detalleBoleta.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Entity
-@Table(name = "detalles_boleta")
-@Data
+@Table(name = "detalle_boleta")
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
 public class DetalleBoleta {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long boletaId; // Relación lógica con boleta
+    @NotNull(message = "El campo idBoleta no puede ser nulo")
+    private Long idBoleta;
 
-    @NotNull
-    private Long productoId; // Relación lógica con producto
+    @NotNull(message = "El campo productoId no puede ser nulo")
+    private Long productoId;
 
-    @NotNull
-    @Positive
+    @NotNull(message = "La cantidad no puede ser nula")
     private Integer cantidad;
 
-    @NotNull
-    @Positive
+    @NotNull(message = "El precio unitario no puede ser nulo")
     private Double precioUnitario;
-
-    public Double getSubtotal() {
-        return cantidad * precioUnitario;
-    }
 }

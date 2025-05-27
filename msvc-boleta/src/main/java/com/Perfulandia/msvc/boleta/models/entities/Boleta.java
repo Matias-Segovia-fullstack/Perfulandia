@@ -2,29 +2,33 @@ package com.Perfulandia.msvc.boleta.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "boletas")
-@Data
+@Table(name = "boleta")
+@Getter @Setter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Boleta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idBoleta;
 
-    @NotNull
-    private Long clienteId;
+    @Column(nullable = false)
+    @NotNull(message = "El ID del cliente es obligatorio")
+    private Long idUsuario;
 
-    @NotNull
-    @DecimalMin("0.0")
-    private Double montoTotal;
+    @Column(nullable = false)
+    @NotNull(message = "ID de sucursal obligatoria")
+    private Long idSucursal;
 
-    @NotNull
-    private LocalDateTime fechaEmision;
+    @Column(nullable = false)
+    @NotNull(message = "El total es obligatorio")
+    private Double total;
+
+    private LocalDateTime fechaCreacion;
 }
+
+

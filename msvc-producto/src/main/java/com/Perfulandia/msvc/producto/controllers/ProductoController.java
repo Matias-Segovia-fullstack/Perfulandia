@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public class ProductoController {
-
 @RestController
 @RequestMapping("/api/v1/productos")
 @Validated
-public class productoController {
+public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
@@ -29,7 +27,7 @@ public class productoController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> findById(@PathVariable Long id){
+    public ResponseEntity<Producto> findById(@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK).body(productoService.findById(id));
     }
 
@@ -41,4 +39,4 @@ public class productoController {
 
 }
 
-}
+
