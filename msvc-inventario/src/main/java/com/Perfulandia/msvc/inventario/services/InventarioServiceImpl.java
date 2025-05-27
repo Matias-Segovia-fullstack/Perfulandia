@@ -7,27 +7,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class InventarioServiceImpl implements InventarioService{
+public class InventarioServiceImpl implements InventarioService {
 
     @Autowired
     private InventarioRepository inventarioRepository;
 
     @Override
-    public List<Inventario> findAll() {
-        return this.inventarioRepository.findAll();
+    public Optional<Inventario> findByIdProducto(Long idProducto) {
+        return this.inventarioRepository.findByProduct_Id(idProducto);
     }
 
     @Override
-    public Inventario findById(Long id) {
-        return this.inventarioRepository.findById(id).orElseThrow(
-                () ->new InventarioException("El usuario con id "+id+" no existe")
-        );
+    public Inventario actualizarStock(Long idProducto, int cantidad) {
+        Inventario inventario = inventarioRepository.findByProduct_Id(idProducto).orElseThrow(
+                () -> new InventarioException("Inventario no encontrado"));
+
+        inventario.setStockActual(cantidad);
+        return this.inventarioRepository.save(inventario);
     }
 
     @Override
     public Inventario save(Inventario inventario) {
-        return null;
+        return this.inventarioRepository.save(inventario);
     }
 }

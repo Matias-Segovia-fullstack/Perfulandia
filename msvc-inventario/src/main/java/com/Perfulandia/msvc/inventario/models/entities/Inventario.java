@@ -1,7 +1,9 @@
 package com.Perfulandia.msvc.inventario.models.entities;
 
+import com.Perfulandia.msvc.producto.models.entities.Producto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -12,12 +14,16 @@ import lombok.*;
 
 public class Inventario {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idStock;
+    private Long idProducto;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name= "id_producto")
+    private Producto producto;
 
     @Column(nullable = false)
-    @NotBlank(message = "El campo descripción stock no puede ser nulo")
-    private String descripcionStock;
+    @NotNull(message = "El campo descripción stock no puede ser nulo")
+    private Integer stockActual;
 
 
 }
