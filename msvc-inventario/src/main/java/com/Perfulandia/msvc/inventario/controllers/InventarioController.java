@@ -25,11 +25,7 @@ public class InventarioController {
         return ResponseEntity.status(HttpStatus.OK).body(inventarioService.actualizarStock(idProducto, cantidad));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Inventario> findByIdProducto(@PathVariable Long idProducto){
-        return inventarioService.findByIdProducto(idProducto)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new InventarioException("Inventario no encontrado"));
+
 
     }
 

@@ -1,4 +1,6 @@
 package com.Perfulandia.msvc.inventario.repositories;
+import java.util.List;
+
 
 import com.Perfulandia.msvc.inventario.models.entities.Inventario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,5 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface InventarioRepository extends JpaRepository <Inventario,Long> {
-    Optional<Inventario> findByProduct_Id(Long IdProducto);
+    List<Inventario> findByIdSucursal(Long idSucursal);
+    List<Inventario> findByIdProducto(Long idProducto);
+    Optional<Inventario> findByIdProductAndSucursal(Long idSucursal, Long idProducto);
+
 }

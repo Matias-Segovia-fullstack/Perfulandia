@@ -14,12 +14,16 @@ import lombok.*;
 
 public class Inventario {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idInventario;
+
+    @Column(nullable = false)
+    @NotNull(message = "El ID del producto es obligatorio")
     private Long idProducto;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name= "id_producto")
-    private Producto producto;
+    @Column(nullable = false)
+    @NotNull(message = "El ID de la sucursal es obligatorio")
+    private Long idSucursal;
 
     @Column(nullable = false)
     @NotNull(message = "El campo descripción stock no puede ser nulo")
@@ -27,3 +31,4 @@ public class Inventario {
 
 
 }
+

@@ -8,7 +8,10 @@ import java.util.Optional;
 
 public interface InventarioService {
 
-    Optional<Inventario> findByIdProducto (Long idProducto);
-    Inventario actualizarStock(Long idProducto, int cantidad);
+    List<Inventario> findAll();
+    Inventario findById(Long id);
     Inventario save(Inventario inventario);
-}
+    List<Inventario> findByIdSucursal(Long idSucursal);
+    List<Inventario> findByIdProducto(Long idProducto);
+    Inventario findByProductAndSucursal(Long idSucursal, Long idProducto);
+    Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock);}
