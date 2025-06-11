@@ -33,4 +33,20 @@ public class ProductoServiceImpl implements ProductoService {
         return this.productoRepository.save(producto);
     }
 
+    @Override
+    public Producto actualizar(Long id, Producto nuevoProducto){
+        Producto productoTemp = productoRepository.findById(id).orElseThrow(
+                () ->new ProductoException("El producto con id "+id+" no existe"));
+        productoTemp.setNombreProducto(nuevoProducto.getNombreProducto());
+        productoTemp.setPrecioProducto(nuevoProducto.getPrecioProducto());
+
+        return this.productoRepository.save(productoTemp);
+    }
+
+    @Override
+    public void borrar(Long id) {
+        Producto productoTemp = productoRepository.findById(id).orElseThrow(
+                () -> new ProductoException("El producto con id " + id + " no existe"));
+        productoRepository.deleteById(id);
+    }
 }

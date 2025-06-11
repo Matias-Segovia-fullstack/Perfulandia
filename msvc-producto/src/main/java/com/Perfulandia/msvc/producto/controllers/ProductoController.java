@@ -37,6 +37,18 @@ public class ProductoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productoService.save(producto));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizar(@PathVariable Long id, @RequestBody Producto nuevoProducto){
+        Producto productoActualizado = productoService.actualizar(id, nuevoProducto);
+        return ResponseEntity.ok(productoActualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> borrar(@PathVariable Long id){
+        productoService.borrar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
 
 

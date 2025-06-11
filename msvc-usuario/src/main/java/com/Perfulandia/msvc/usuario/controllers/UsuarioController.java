@@ -37,4 +37,17 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.save(usuario));
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario nuevoUsuario){
+        Usuario usuarioActualizado = usuarioService.actualizar(id, nuevoUsuario);
+        return ResponseEntity.ok(usuarioActualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> borrar(@PathVariable Long id){
+        usuarioService.borrar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -30,4 +30,21 @@ public class UsuarioServiceImpl implements UsuarioService{
     public Usuario save(Usuario usuario) {
         return this.usuarioRepository.save(usuario);
     }
+
+    @Override
+    public Usuario actualizar(Long id, Usuario nuevoUsuario){
+        Usuario usuarioTemp = usuarioRepository.findById(id).orElseThrow(
+                () ->new UsuarioException("El usuario con id "+id+" no existe"));
+        usuarioTemp.setNombreUsuario(nuevoUsuario.getNombreUsuario());
+        usuarioTemp.setRut(nuevoUsuario.getRut());
+
+        return this.usuarioRepository.save(usuarioTemp);
+    }
+
+    @Override
+    public void borrar(Long id){
+        Usuario usuarioTemp = usuarioRepository.findById(id).orElseThrow(
+                () ->new UsuarioException("El usuario con id "+id+" no existe"));
+        usuarioRepository.deleteById(id);
+    }
 }
