@@ -39,19 +39,55 @@ public class BoletaServiceImpl implements BoletaService {
     @Override
     public Boleta save(Boleta boleta) {
         // Validar que el cliente exista
-        UsuarioDTO usuario = usuarioClient.obtenerUsuario(boleta.getIdUsuario());
-        if (usuario == null) {
+        UsuarioDTO usuarioDTO = usuarioClient.obtenerUsuario(boleta.getIdUsuario());
+        if (usuarioDTO == null) {
             throw new BoletaException("El cliente con id " + boleta.getIdUsuario() + " no existe");
         }
 
         // Validar que la sucursal exista
-        SucursalDTO sucursal = sucursalClient.obtenerSucursal(boleta.getIdSucursal());
-        if (sucursal == null) {
+        SucursalDTO sucursalDTO = sucursalClient.obtenerSucursal(boleta.getIdSucursal());
+        if (sucursalDTO == null) {
             throw new BoletaException("La sucursal con id " + boleta.getIdSucursal() + " no existe");
         }
 
         boleta.setFechaCreacion(LocalDateTime.now());
         return boletaRepository.save(boleta);
+    }
+
+    @Override
+    public List<Boleta> findByIdUsuario(Long idUsuario) {
+        List<Boleta> boletaUsuario = boletaRepository.findByIdUsuario(idUsuario);
+        if(boletaUsuario.isEmpty()){
+            throw new BoletaException("No hay boletas registradas del usuario con id "+idUsuario);
+        }
+        return boletaUsuario;
+    }
+
+    @Override
+    public List<Boleta> findByIdSucursal(Long idSucursal) {
+        List<Boleta> boletaSucursal = boletaRepository.findByIdSucursal(idSucursal);
+        if(boletaSucursal.isEmpty()){
+           throw new BoletaException("No hay boletas registradas en la sucursal con id "+idSucursal);
+        }
+        return boletaSucursal;
+    }
+
+    @Override
+    public Boleta actualizar(Long id, Boleta nuevaBoleta) {
+        Boleta boletaTemp = boletaRepository.findById(id).orElseThrow(
+                ()-> new BoletaException("No existe la boleta con id "+id));
+        boletaTemp.setIdUsuario(nuevaBoleta.getIdUsuario());
+        boletaTemp.setIdSucursal(nuevaBoleta.getIdSucursal());
+        boletaTemp.setTotal(nuevaBoleta.getTotal());
+
+        return this.boletaRepository.save(boletaTemp);
+    }
+
+    @Override
+    public void borrar(Long id) {
+        Boleta boletaTemp = boletaRepository.findById(id).orElseThrow(
+                ()-> new BoletaException("No existe la boleta con id "+id));
+        boletaRepository.deleteById(id);
     }
 }
 

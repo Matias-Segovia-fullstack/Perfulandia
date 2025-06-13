@@ -8,5 +8,9 @@ public interface BoletaService {
     List<Boleta> findAll();
     Boleta findById(Long id);
     Boleta save(Boleta boleta);
+    List<Boleta> findByIdUsuario(Long idUsuario);
+    List<Boleta> findByIdSucursal(Long idSucursal);
+    Boleta actualizar(Long id, Boleta nuevaBoleta);
+    void borrar(Long id);
 }
 
