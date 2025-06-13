@@ -10,10 +10,7 @@ import com.Perfulandia.msvc.inventario.repositories.InventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.html.Option;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
@@ -71,13 +68,13 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     public Inventario findByProductoAndSucursal(Long idSucursal, Long idProducto){
-        return this.inventarioRepository.findByIdProductoAndSucursal(idSucursal, idProducto).orElseThrow(
+        return this.inventarioRepository.findByIdProductoAndIdSucursal(idSucursal, idProducto).orElseThrow(
                 () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
     }
 
     @Override
     public Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock) {
-        Inventario inventario = inventarioRepository.findByIdProductoAndSucursal(idSucursal, idProducto).orElseThrow(
+        Inventario inventario = inventarioRepository.findByIdProductoAndIdSucursal(idSucursal, idProducto).orElseThrow(
                 () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
 
         inventario.setStockActual(nuevoStock);
