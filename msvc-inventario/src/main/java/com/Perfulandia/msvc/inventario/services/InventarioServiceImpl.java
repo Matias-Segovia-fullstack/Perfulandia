@@ -70,7 +70,7 @@ public class InventarioServiceImpl implements InventarioService {
     }
 
     @Override
-    public Inventario findByProductAndSucursal(Long idSucursal, Long idProducto){
+    public Inventario findByProductoAndSucursal(Long idSucursal, Long idProducto){
         return this.inventarioRepository.findByIdProductoAndSucursal(idSucursal, idProducto).orElseThrow(
                 () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
     }
