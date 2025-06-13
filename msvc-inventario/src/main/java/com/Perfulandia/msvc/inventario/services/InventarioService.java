@@ -13,6 +13,6 @@ public interface InventarioService {
     Inventario save(Inventario inventario);
     List<Inventario> findByIdSucursal(Long idSucursal);
     List<Inventario> findByIdProducto(Long idProducto);
-    Inventario findByProductAndSucursal(Long idSucursal, Long idProducto);
+    Inventario findByProductoAndSucursal(Long idSucursal, Long idProducto);
     Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock);
     void borrar(Long id);}

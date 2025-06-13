@@ -71,13 +71,13 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     public Inventario findByProductAndSucursal(Long idSucursal, Long idProducto){
-        return this.inventarioRepository.findByIdProductAndSucursal(idSucursal, idProducto).orElseThrow(
+        return this.inventarioRepository.findByIdProductoAndSucursal(idSucursal, idProducto).orElseThrow(
                 () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
     }
 
     @Override
     public Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock) {
-        Inventario inventario = inventarioRepository.findByIdProductAndSucursal(idSucursal, idProducto).orElseThrow(
+        Inventario inventario = inventarioRepository.findByIdProductoAndSucursal(idSucursal, idProducto).orElseThrow(
                 () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
 
         inventario.setStockActual(nuevoStock);

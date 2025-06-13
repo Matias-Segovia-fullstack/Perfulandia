@@ -51,7 +51,7 @@ public class InventarioController {
     public ResponseEntity<Inventario> findByProductAndSucursal(
             @PathVariable("idSucursal") Long idSucursal,
             @PathVariable("idProducto") Long idProducto) {
-        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findByProductAndSucursal(idSucursal, idProducto));
+        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findByProductoAndSucursal(idSucursal, idProducto));
     }
 
     @PutMapping("/sucursal/{idSucursal}/producto/{idProducto}")
