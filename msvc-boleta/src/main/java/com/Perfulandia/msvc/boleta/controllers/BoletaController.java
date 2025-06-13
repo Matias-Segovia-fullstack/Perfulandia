@@ -29,9 +29,33 @@ public class BoletaController {
         return ResponseEntity.ok(boletaService.findById(id));
     }
 
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<Boleta>> findByIdUsuario(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(boletaService.findByIdUsuario(id));
+    }
+
+    @GetMapping("/sucursal/{id}")
+    public ResponseEntity<List<Boleta>> findByIdSucursal(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(boletaService.findByIdSucursal(id));
+    }
+
     @PostMapping
     public ResponseEntity<Boleta> save(@Valid @RequestBody Boleta boleta) {
         return ResponseEntity.status(HttpStatus.CREATED).body(boletaService.save(boleta));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Boleta> actualizar(@PathVariable Long id, @RequestBody Boleta nuevaBoleta) {
+        Boleta boletaActualizada = boletaService.actualizar(id, nuevaBoleta);
+        return ResponseEntity.ok(boletaActualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> borrar(@PathVariable Long id) {
+        boletaService.borrar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
 

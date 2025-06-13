@@ -2,6 +2,7 @@ package com.Perfulandia.msvc.inventario.services;
 
 import com.Perfulandia.msvc.inventario.clients.ProductoClient;
 import com.Perfulandia.msvc.inventario.clients.SucursalClient;
+import com.Perfulandia.msvc.inventario.dto.ProductoDTO;
 import com.Perfulandia.msvc.inventario.dto.SucursalDTO;
 import com.Perfulandia.msvc.inventario.exceptions.InventarioException;
 import com.Perfulandia.msvc.inventario.models.entities.Inventario;
@@ -9,6 +10,7 @@ import com.Perfulandia.msvc.inventario.repositories.InventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +39,16 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     public Inventario save(Inventario inventario) {
-        return this.inventarioRepository.save(inventario);
+        SucursalDTO sucursalDTO = sucursalClient.obtenerSucursal(inventario.getIdSucursal());
+        if(sucursalDTO==null) {
+            throw new InventarioException("La sucursal con id "+inventario.getIdSucursal()+" no existe");
+        }
+
+        ProductoDTO productoDTO = productoClient.obtenerProducto(inventario.getIdProducto());
+        if(productoDTO==null) {
+            throw new InventarioException("El producto con id "+inventario.getIdProducto()+" no existe");
+        }
+        return inventarioRepository.save(inventario);
     }
 
     @Override
@@ -55,7 +66,6 @@ public class InventarioServiceImpl implements InventarioService {
         if (inventarioProducto.isEmpty()) {
             throw new InventarioException("No hay inventario registrado para el producto con ID " + idProducto);
         }
-
         return inventarioProducto;
     }
 
