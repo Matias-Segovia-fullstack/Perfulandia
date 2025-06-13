@@ -14,4 +14,5 @@ public interface InventarioService {
     List<Inventario> findByIdSucursal(Long idSucursal);
     List<Inventario> findByIdProducto(Long idProducto);
     Inventario findByProductAndSucursal(Long idSucursal, Long idProducto);
-    Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock);}
+    Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock);
+    void borrar(Long id);}

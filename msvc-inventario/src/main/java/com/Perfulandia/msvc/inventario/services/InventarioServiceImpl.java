@@ -1,5 +1,8 @@
 package com.Perfulandia.msvc.inventario.services;
 
+import com.Perfulandia.msvc.inventario.clients.ProductoClient;
+import com.Perfulandia.msvc.inventario.clients.SucursalClient;
+import com.Perfulandia.msvc.inventario.dto.SucursalDTO;
 import com.Perfulandia.msvc.inventario.exceptions.InventarioException;
 import com.Perfulandia.msvc.inventario.models.entities.Inventario;
 import com.Perfulandia.msvc.inventario.repositories.InventarioRepository;
@@ -15,6 +18,12 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Autowired
     private InventarioRepository inventarioRepository;
+
+    @Autowired
+    private ProductoClient productoClient;
+
+    @Autowired
+    private SucursalClient sucursalClient;
 
     @Override
     public List<Inventario> findAll() {return this.inventarioRepository.findAll();}
@@ -63,5 +72,12 @@ public class InventarioServiceImpl implements InventarioService {
 
         inventario.setStockActual(nuevoStock);
         return this.inventarioRepository.save(inventario);
+    }
+
+    @Override
+    public void borrar(Long id) {
+        Inventario inventarioTemp = inventarioRepository.findById(id).orElseThrow(
+                ()-> new InventarioException("El inventario con el id "+id+" no existe"));
+        inventarioRepository.deleteById(id);
     }
 }

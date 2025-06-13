@@ -22,12 +22,28 @@ public class SucursalServiceImpl implements SucursalService{
     @Override
     public Sucursal findById(Long id) {
         return this.sucursalRepository.findById(id).orElseThrow(
-                () ->new SucursalException("la sucursal con id "+id+" no existe")
-        );
+                () ->new SucursalException("la sucursal con id "+id+" no existe"));
     }
 
     @Override
     public Sucursal save(Sucursal sucursal) {
         return this.sucursalRepository.save(sucursal);
+    }
+
+    @Override
+    public Sucursal actualizar(Long id, Sucursal nuevaSucursal) {
+        Sucursal sucursalTemp = sucursalRepository.findById(id).orElseThrow(
+                () ->new SucursalException("La sucursal con id "+id+" no existe"));
+        sucursalTemp.setNombreSucursal(nuevaSucursal.getNombreSucursal());
+        sucursalTemp.setDireccion(nuevaSucursal.getDireccion());
+
+        return this.sucursalRepository.save(sucursalTemp);
+    }
+
+    @Override
+    public void borrar(Long id) {
+        Sucursal sucursalTemp = sucursalRepository.findById(id).orElseThrow(
+                () ->new SucursalException("La sucursal con id "+id+" no existe"));
+        sucursalRepository.deleteById(id);
     }
 }
