@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
@@ -67,16 +68,17 @@ public class InventarioServiceImpl implements InventarioService {
     }
 
     @Override
-    public Inventario findByProductoAndSucursal(Long idSucursal, Long idProducto){
-        return this.inventarioRepository.findByIdProductoAndIdSucursal(idSucursal, idProducto).orElseThrow(
-                () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
+    public Inventario findByProductoAndSucursal(Long idSucursal, Long idProducto) {
+        try{
+            return this.inventarioRepository.findByIdProductoAndIdSucursal(idProducto,idSucursal).getFirst();
+        } catch (NoSuchElementException e) {
+            throw new InventarioException("No hay inventario registrado para el producto con ID " + idProducto);
+        }
     }
 
     @Override
     public Inventario actualizarStock(Long idSucursal, Long idProducto, int nuevoStock) {
-        Inventario inventario = inventarioRepository.findByIdProductoAndIdSucursal(idSucursal, idProducto).orElseThrow(
-                () ->new InventarioException("el producto "+idProducto+" no existe en la sucursal "+idSucursal));
-
+        Inventario inventario = inventarioRepository.findByIdProductoAndIdSucursal(idSucursal, idProducto).getFirst();
         inventario.setStockActual(nuevoStock);
         return this.inventarioRepository.save(inventario);
     }

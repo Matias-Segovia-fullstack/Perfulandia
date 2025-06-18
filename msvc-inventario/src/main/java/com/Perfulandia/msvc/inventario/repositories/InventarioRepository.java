@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface InventarioRepository extends JpaRepository <Inventario,Long> {
     List<Inventario> findByIdSucursal(Long idSucursal);
     List<Inventario> findByIdProducto(Long idProducto);
-    Optional<Inventario> findByIdProductoAndIdSucursal(Long idSucursal, Long idProducto);
+    List<Inventario> findByIdProductoAndIdSucursal(Long idProducto, Long idSucursal );
 
 }
