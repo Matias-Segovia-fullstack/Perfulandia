@@ -10,5 +10,7 @@ public interface DetalleBoletaService {
     List<DetalleBoleta> listarPorBoleta(Long idBoleta);
     Optional<DetalleBoleta> obtener(Long id);
     boolean eliminar(Long id);
+    DetalleBoleta actualizar(Long id, DetalleBoleta nuevoDetalle);
+
 }
 
