@@ -51,26 +51,15 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
 
     @Override
     public DetalleBoleta actualizar(Long id, DetalleBoleta nuevoDetalle) {
-        Optional<DetalleBoleta> existente = repository.findById(id);
-
-        if (existente.isEmpty()) {
-            throw new RuntimeException("No se encontró detalle con id: " + id);
-        }
-
-        // Validar que el producto exista antes de actualizar
-        ProductoDTO producto = productoClient.obtenerProducto(nuevoDetalle.getProductoId());
-        if (producto == null) {
-            throw new RuntimeException("Producto no encontrado con ID: " + nuevoDetalle.getProductoId());
-        }
-
-        DetalleBoleta actualizado = existente.get();
-        actualizado.setIdBoleta(nuevoDetalle.getIdBoleta());
-        actualizado.setProductoId(nuevoDetalle.getProductoId());
-        actualizado.setCantidad(nuevoDetalle.getCantidad());
-        actualizado.setPrecioUnitario(producto.getPrecioProducto().doubleValue());
-
-        return repository.save(actualizado);
+        DetalleBoleta existente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontró el detalle con ID: " + id));
+        existente.setIdBoleta(nuevoDetalle.getIdBoleta());
+        existente.setProductoId(nuevoDetalle.getProductoId());
+        existente.setCantidad(nuevoDetalle.getCantidad());
+        existente.setPrecioUnitario(nuevoDetalle.getPrecioUnitario());
+        return repository.save(existente);
     }
+
 
 }
 

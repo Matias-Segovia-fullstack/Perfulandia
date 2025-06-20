@@ -44,15 +44,10 @@ public class DetalleBoletaController {
                 : ResponseEntity.notFound().build();
     }
     @PutMapping("/{id}")
-    public ResponseEntity<DetalleBoleta> actualizar(@PathVariable Long id, @Valid @RequestBody DetalleBoleta nuevoDetalle) {
-        return service.obtener(id).map(detalleExistente -> {
-            detalleExistente.setIdBoleta(nuevoDetalle.getIdBoleta());
-            detalleExistente.setProductoId(nuevoDetalle.getProductoId());
-            detalleExistente.setCantidad(nuevoDetalle.getCantidad());
-            detalleExistente.setPrecioUnitario(nuevoDetalle.getPrecioUnitario());
-            DetalleBoleta actualizado = service.guardar(detalleExistente);
-            return ResponseEntity.ok(actualizado);
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<DetalleBoleta> actualizar(@PathVariable Long id, @Valid @RequestBody DetalleBoleta detalle) {
+        DetalleBoleta actualizado = service.actualizar(id, detalle);
+        return ResponseEntity.ok(actualizado);
     }
+
 }
 
