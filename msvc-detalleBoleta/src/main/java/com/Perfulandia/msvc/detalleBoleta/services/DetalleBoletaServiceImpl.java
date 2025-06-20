@@ -6,7 +6,7 @@ import com.Perfulandia.msvc.detalleBoleta.models.entities.DetalleBoleta;
 import com.Perfulandia.msvc.detalleBoleta.repositories.DetalleBoletaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.Perfulandia.msvc.detalleBoleta.exceptions.DetalleBoletaException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,12 +41,10 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
     }
 
     @Override
-    public boolean eliminar(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void borrar(Long id) {
+        DetalleBoleta detalle = repository.findById(id).orElseThrow(
+                () -> new DetalleBoletaException("El detalle con id " + id + " no existe"));
+        repository.deleteById(id);
     }
 
     @Override
@@ -59,7 +57,6 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
         existente.setPrecioUnitario(nuevoDetalle.getPrecioUnitario());
         return repository.save(existente);
     }
-
 
 }
 

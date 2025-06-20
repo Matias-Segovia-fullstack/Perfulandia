@@ -36,13 +36,12 @@ public class DetalleBoletaController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable("id") Long id) {
-        return service.eliminar(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> borrar(@PathVariable("id") Long id) {
+        service.borrar(id);
+        return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<DetalleBoleta> actualizar(@PathVariable Long id, @Valid @RequestBody DetalleBoleta detalle) {
         DetalleBoleta actualizado = service.actualizar(id, detalle);
