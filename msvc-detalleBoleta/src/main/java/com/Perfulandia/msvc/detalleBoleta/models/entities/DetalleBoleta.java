@@ -25,6 +25,5 @@ public class DetalleBoleta {
     @NotNull(message = "La cantidad no puede ser nula")
     private Integer cantidad;
 
-    @NotNull(message = "El precio unitario no puede ser nulo")
     private Double precioUnitario;
 }

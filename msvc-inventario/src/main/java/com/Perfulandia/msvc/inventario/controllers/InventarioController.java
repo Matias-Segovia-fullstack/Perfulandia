@@ -56,13 +56,12 @@ public class InventarioController {
 
     @PutMapping("/sucursal/{idSucursal}/producto/{idProducto}")
     public ResponseEntity<Inventario> actualizarStock(
-            @PathVariable Long idSucursal,
-            @PathVariable Long idProducto,
+            @PathVariable("idSucursal") Long idSucursal,
+            @PathVariable("idProducto") Long idProducto,
             @RequestBody Integer nuevoStock) {
         Inventario inventarioActualizado = inventarioService.actualizarStock(idSucursal, idProducto, nuevoStock);
         return ResponseEntity.ok(inventarioActualizado);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable Long id){
