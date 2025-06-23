@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/inventarios")
 @Validated
-@Tag(name = "Inventarios", description = "Operaciones inventarios")
+@Tag(name = "Inventarios Hateos", description = "Operaciones inventarios")
 public class InventarioControllerV2 {
 
     @Autowired

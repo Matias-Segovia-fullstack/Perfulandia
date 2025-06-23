@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/usuarios")
 @Validated
-@Tag(name = "Usuarios", description = "Operaciones usuarios Hateos")
+@Tag(name = "Usuarios Hateos", description = "Operaciones usuarios Hateos")
 public class UsuarioControllerV2 {
 
     @Autowired

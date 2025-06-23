@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/productos")
 @Validated
-@Tag(name = "Productos", description = "Operaciones productos Hateos")
+@Tag(name = "Productos Hateos", description = "Operaciones productos Hateos")
 public class ProductoControllerV2 {
 
     @Autowired
