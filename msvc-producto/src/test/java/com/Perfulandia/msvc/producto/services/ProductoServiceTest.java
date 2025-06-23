@@ -110,5 +110,31 @@ class ProductoServiceTest {
         verify(productoRepository).findById(99L);
         verify(productoRepository, never()).deleteById(any());
     }
+
+    @Test
+    @DisplayName("Obtiene producto existente por ID correctamente")
+    void shouldFindProductoById() {
+        when(productoRepository.findById(1L)).thenReturn(Optional.of(producto));
+
+        Producto resultado = productoService.findById(1L);
+
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.getNombreProducto()).isEqualTo("Perfume A");
+        assertThat(resultado.getPrecioProducto()).isEqualTo(5000);
+
+        verify(productoRepository).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Lanza excepción al buscar producto inexistente")
+    void shouldThrowExceptionWhenFindingNonexistentProducto() {
+        when(productoRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> productoService.findById(99L))
+                .isInstanceOf(ProductoException.class)
+                .hasMessageContaining("no existe");
+
+        verify(productoRepository).findById(99L);
+    }
 }
 

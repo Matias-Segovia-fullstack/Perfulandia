@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -148,5 +149,45 @@ class DetalleBoletaServiceTest {
         verify(repository).findById(1L);
         verify(repository).save(any(DetalleBoleta.class));
     }
+
+    @Test
+    @DisplayName("Devuelve lista de detalles por ID de boleta")
+    void shouldReturnDetallesByIdBoleta() {
+        List<DetalleBoleta> detalles = List.of(detalle);
+        when(repository.findByIdBoleta(100L)).thenReturn(detalles);
+
+        List<DetalleBoleta> resultado = service.listarPorBoleta(100L);
+
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.getFirst().getIdBoleta()).isEqualTo(100L);
+        verify(repository).findByIdBoleta(100L);
+    }
+
+    @Test
+    @DisplayName("Lanza excepción si el detalle no existe al buscar por ID")
+    void shouldThrowExceptionWhenFindingNonexistentDetalle() {
+        when(repository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.obtener(999L).orElseThrow(
+                () -> new DetalleBoletaException("Detalle con id 999 no existe")))
+                .isInstanceOf(DetalleBoletaException.class)
+                .hasMessageContaining("no existe");
+
+        verify(repository).findById(999L);
+    }
+
+
+    @Test
+    @DisplayName("Elimina detalle correctamente si existe")
+    void shouldDeleteExistingDetalle() {
+        when(repository.findById(1L)).thenReturn(Optional.of(detalle));
+        doNothing().when(repository).deleteById(1L);
+
+        service.borrar(1L);
+
+        verify(repository).findById(1L);
+        verify(repository).deleteById(1L);
+    }
+
 }
 
