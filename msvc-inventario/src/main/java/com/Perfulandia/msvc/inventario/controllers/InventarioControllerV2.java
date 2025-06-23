@@ -7,6 +7,7 @@ import com.Perfulandia.msvc.inventario.services.InventarioService;
 import com.Perfulandia.msvc.producto.controllers.ProductoControllerV2;
 import com.Perfulandia.msvc.producto.models.entities.Producto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -115,12 +116,24 @@ public class InventarioControllerV2 {
 
 
     @PutMapping("/sucursal/{idSucursal}/producto/{idProducto}")
-    public ResponseEntity<Inventario> actualizarStock(
+    public ResponseEntity<EntityModel<Inventario>> actualizarStock(
             @PathVariable("idSucursal") Long idSucursal,
             @PathVariable("idProducto") Long idProducto,
             @RequestBody Integer nuevoStock) {
-        Inventario inventarioActualizado = inventarioService.actualizarStock(idSucursal, idProducto, nuevoStock);
-        return ResponseEntity.ok(inventarioActualizado);
+        if (nuevoStock == null || nuevoStock < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        try {
+            Inventario inventarioActualizado = inventarioService.actualizarStock(idSucursal, idProducto, nuevoStock);
+            EntityModel<Inventario> entityModel = inventarioModelAssembler.toModel(inventarioActualizado);
+            return ResponseEntity.ok(entityModel);
+        } catch (EntityNotFoundException ex) {
+            // Si el servicio lanza esta excepción cuando no encuentra el inventario
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            // Para otros errores, devuelve 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{id}")
