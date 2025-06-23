@@ -73,9 +73,15 @@ public class UsuarioControllerV2 {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario nuevoUsuario){
-        Usuario usuarioActualizado = usuarioService.actualizar(id, nuevoUsuario);
-        return ResponseEntity.ok(usuarioActualizado);
+    public ResponseEntity<EntityModel<Usuario>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody Usuario usuarioNuevo
+    ) {
+        Usuario usuarioActualizado = this.usuarioService.actualizar(id, usuarioNuevo);
+        EntityModel<Usuario> entityModel = this.usuarioModelAssembler.toModel(usuarioActualizado);
+
+        return ResponseEntity
+                .ok(entityModel);
     }
 
     @DeleteMapping("/{id}")
