@@ -1,5 +1,6 @@
 package com.Perfulandia.msvc.boleta.controllers;
 
+import com.Perfulandia.msvc.boleta.assemblers.BoletaModelAssembler;
 import com.Perfulandia.msvc.boleta.models.entities.Boleta;
 import com.Perfulandia.msvc.boleta.services.BoletaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,13 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/boletas")
+@RequestMapping("/api/v2/boletas")
 @Validated
-@Tag(name = "boletas", description = "Operaciones boletas")
-public class BoletaController {
+@Tag(name = "boletas", description = "Operaciones boletas Hateos")
+public class BoletaControllerV2 {
 
     @Autowired
     private BoletaService boletaService;
+
+    @Autowired
+    private BoletaModelAssembler boletaModelAssembler;
 
     @GetMapping
     public ResponseEntity<List<Boleta>> findAll() {

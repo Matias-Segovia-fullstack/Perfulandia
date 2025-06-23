@@ -1,5 +1,6 @@
 package com.Perfulandia.msvc.usuario.controllers;
 
+import com.Perfulandia.msvc.usuario.assemblers.UsuarioModelAssembler;
 import com.Perfulandia.msvc.usuario.models.entities.Usuario;
 import com.Perfulandia.msvc.usuario.services.UsuarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,13 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping("/api/v2/usuarios")
 @Validated
-@Tag(name = "Usuarios", description = "Operaciones usuarios")
-public class UsuarioController {
+@Tag(name = "Usuarios", description = "Operaciones usuarios Hateos")
+public class UsuarioControllerV2 {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private UsuarioModelAssembler usuarioModelAssembler;
 
 
     @GetMapping

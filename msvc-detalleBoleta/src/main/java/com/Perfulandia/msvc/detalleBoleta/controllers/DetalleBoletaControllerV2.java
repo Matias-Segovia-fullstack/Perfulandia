@@ -1,9 +1,11 @@
 package com.Perfulandia.msvc.detalleBoleta.controllers;
 
+import com.Perfulandia.msvc.detalleBoleta.assemblers.DetalleBoletaModelAssembler;
 import com.Perfulandia.msvc.detalleBoleta.models.entities.DetalleBoleta;
 import com.Perfulandia.msvc.detalleBoleta.services.DetalleBoletaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,14 +15,18 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/detalles")
+@RequestMapping("/api/v2/detalles")
 @Validated
-@Tag(name = "detalleboletas", description = "Operaciones detalle boletas")
-public class DetalleBoletaController {
+@Tag(name = "detalleboletas", description = "Operaciones detalle boletas Hateos")
+public class DetalleBoletaControllerV2 {
 
+    @Autowired
     private final DetalleBoletaService service;
 
-    public DetalleBoletaController(DetalleBoletaService service) {
+    @Autowired
+    private DetalleBoletaModelAssembler detalleBoletaModelAssembler;
+
+    public DetalleBoletaControllerV2(DetalleBoletaService service) {
         this.service = service;
     }
 

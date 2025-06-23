@@ -22,6 +22,7 @@ public class DetalleBoleta {
     @NotNull(message = "El campo productoId no puede ser nulo")
     private Long productoId;
 
+
     @NotNull(message = "La cantidad no puede ser nula")
     private Integer cantidad;
 

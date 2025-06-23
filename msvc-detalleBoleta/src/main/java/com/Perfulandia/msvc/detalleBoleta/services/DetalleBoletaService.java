@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DetalleBoletaService {
+    List<DetalleBoleta> findAll();
     DetalleBoleta guardar(DetalleBoleta detalle);
     List<DetalleBoleta> listarPorBoleta(Long idBoleta);
     Optional<DetalleBoleta> obtener(Long id);

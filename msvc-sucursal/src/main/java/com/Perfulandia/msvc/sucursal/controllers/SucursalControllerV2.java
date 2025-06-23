@@ -1,5 +1,6 @@
 package com.Perfulandia.msvc.sucursal.controllers;
 
+import com.Perfulandia.msvc.sucursal.assemblers.SucursalModelAssembler;
 import com.Perfulandia.msvc.sucursal.models.entities.Sucursal;
 import com.Perfulandia.msvc.sucursal.services.SucursalService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sucursales")
+@RequestMapping("/api/v2/sucursales")
 @Validated
-@Tag(name = "Sucursales", description = "Operaciones sucursales")
-public class SucursalController {
+@Tag(name = "Sucursales", description = "Operaciones sucursales Hateos")
+public class SucursalControllerV2 {
 
     @Autowired
     private SucursalService sucursalService;
 
+    @Autowired
+    private SucursalModelAssembler sucursalModelAssembler;
 
     @GetMapping
     public ResponseEntity<List<Sucursal>> findAll() {

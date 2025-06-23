@@ -1,11 +1,10 @@
 package com.Perfulandia.msvc.inventario.controllers;
 
 
-import com.Perfulandia.msvc.inventario.exceptions.InventarioException;
+import com.Perfulandia.msvc.inventario.assemblers.InventarioModelAssembler;
 import com.Perfulandia.msvc.inventario.models.entities.Inventario;
 import com.Perfulandia.msvc.inventario.services.InventarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/inventarios")
+@RequestMapping("/api/v2/inventarios")
 @Validated
 @Tag(name = "Inventarios", description = "Operaciones inventarios")
-public class InventarioController {
+public class InventarioControllerV2 {
 
     @Autowired
     private InventarioService inventarioService;
+
+    @Autowired
+    private InventarioModelAssembler inventarioModelAssembler;
 
     @GetMapping
     public ResponseEntity<List<Inventario>> findAll() {

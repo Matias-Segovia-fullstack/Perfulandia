@@ -31,6 +31,9 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
     private InventarioClient inventarioClient;
 
     @Override
+    public List<DetalleBoleta> findAll() {return this.repository.findAll();}
+
+    @Override
     public DetalleBoleta guardar(DetalleBoleta detalle) {
         // Validar que el producto exista
         ProductoDTO producto = productoClient.obtenerProducto(detalle.getProductoId());

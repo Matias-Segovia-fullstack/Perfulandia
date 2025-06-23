@@ -1,5 +1,6 @@
 package com.Perfulandia.msvc.producto.controllers;
 
+import com.Perfulandia.msvc.producto.assemblers.ProductoModelAssembler;
 import com.Perfulandia.msvc.producto.models.entities.Producto;
 import com.Perfulandia.msvc.producto.services.ProductoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/productos")
+@RequestMapping("/api/v2/productos")
 @Validated
-@Tag(name = "Productos", description = "Operaciones productos")
-public class ProductoController {
+@Tag(name = "Productos", description = "Operaciones productos Hateos")
+public class ProductoControllerV2 {
 
     @Autowired
     private ProductoService productoService;
 
+    @Autowired
+    private ProductoModelAssembler productoModelAssembler;
 
     @GetMapping
     public ResponseEntity<List<Producto>> findAll() {
