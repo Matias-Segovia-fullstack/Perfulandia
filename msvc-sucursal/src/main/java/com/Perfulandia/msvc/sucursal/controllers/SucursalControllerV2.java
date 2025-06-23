@@ -71,7 +71,7 @@ public class SucursalControllerV2 {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<Sucursal>> update(
+    public ResponseEntity<EntityModel<Sucursal>> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody Sucursal sucursalNueva
     ) {

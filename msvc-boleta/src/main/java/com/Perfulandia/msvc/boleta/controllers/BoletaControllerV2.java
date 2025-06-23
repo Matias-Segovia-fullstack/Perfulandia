@@ -6,12 +6,17 @@ import com.Perfulandia.msvc.boleta.services.BoletaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v2/boletas")
@@ -26,34 +31,84 @@ public class BoletaControllerV2 {
     private BoletaModelAssembler boletaModelAssembler;
 
     @GetMapping
-    public ResponseEntity<List<Boleta>> findAll() {
-        return ResponseEntity.ok(boletaService.findAll());
+    public ResponseEntity<CollectionModel<EntityModel<Boleta>>> findAll() {
+        List<EntityModel<Boleta>> entityModels = this.boletaService.findAll()
+                .stream()
+                .map(boletaModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Boleta>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(BoletaControllerV2.class).findAll()).withSelfRel()
+
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Boleta> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(boletaService.findById(id));
+    public ResponseEntity<EntityModel<Boleta>> findById(@PathVariable Long id) {
+        EntityModel<Boleta> entityModel = this.boletaModelAssembler.toModel(
+                this.boletaService.findById(id)
+        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(entityModel);
     }
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<List<Boleta>> findByIdUsuario(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(boletaService.findByIdUsuario(id));
+    public ResponseEntity<CollectionModel<EntityModel<Boleta>>> findByIdUsuario(@PathVariable("id") Long id) {
+        List<Boleta> boletas = boletaService.findByIdUsuario(id);
+
+        List<EntityModel<Boleta>> entityModel = boletas.stream()
+                .map(boletaModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Boleta>> collectionModel = CollectionModel.of(entityModel);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
     @GetMapping("/sucursal/{id}")
-    public ResponseEntity<List<Boleta>> findByIdSucursal(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(boletaService.findByIdSucursal(id));
+    public ResponseEntity<CollectionModel<EntityModel<Boleta>>> findByIdSucursal(@PathVariable("id") Long id) {
+        List<Boleta> boletas = boletaService.findByIdSucursal(id);
+
+        List<EntityModel<Boleta>> entityModel = boletas
+                .stream()
+                .map(boletaModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Boleta>> collectionModel = CollectionModel.of(entityModel);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
     @PostMapping
-    public ResponseEntity<Boleta> save(@Valid @RequestBody Boleta boleta) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(boletaService.save(boleta));
+    public ResponseEntity<EntityModel<Boleta>>  create(@Valid @RequestBody Boleta boleta) {
+        Boleta boletaNueva = this.boletaService.save(boleta);
+        EntityModel<Boleta> entityModel = this.boletaModelAssembler.toModel(boletaNueva);
+
+        return ResponseEntity
+                .created(linkTo(methodOn(BoletaControllerV2.class).findById(boletaNueva.getIdBoleta())).toUri())
+                .body(entityModel);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Boleta> actualizar(@PathVariable Long id, @RequestBody Boleta nuevaBoleta) {
-        Boleta boletaActualizada = boletaService.actualizar(id, nuevaBoleta);
-        return ResponseEntity.ok(boletaActualizada);
+    public ResponseEntity<EntityModel<Boleta>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody Boleta boletaNueva
+    ) {
+        Boleta boletaActualizada = this.boletaService.actualizar(id, boletaNueva);
+        EntityModel<Boleta> entityModel = this.boletaModelAssembler.toModel(boletaActualizada);
+
+        return ResponseEntity
+                .ok(entityModel);
     }
 
     @DeleteMapping("/{id}")

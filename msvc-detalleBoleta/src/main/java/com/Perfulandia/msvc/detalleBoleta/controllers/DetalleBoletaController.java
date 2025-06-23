@@ -42,9 +42,12 @@ public class DetalleBoletaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DetalleBoleta> obtener(@PathVariable("id") Long id) {
-        return service.obtener(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        DetalleBoleta detalle = service.obtener(id);
+        if (detalle != null) {
+            return ResponseEntity.ok(detalle);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable("id") Long id) {
