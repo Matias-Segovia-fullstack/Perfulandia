@@ -87,6 +87,8 @@ public class DetalleBoletaControllerV2 {
                 .body(entityModel);
     }
 
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable("id") Long id) {
         service.borrar(id);

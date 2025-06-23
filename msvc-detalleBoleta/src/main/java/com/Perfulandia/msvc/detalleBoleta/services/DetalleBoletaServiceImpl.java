@@ -77,9 +77,11 @@ public class DetalleBoletaServiceImpl implements DetalleBoletaService {
     }
 
     @Override
-    public Optional<DetalleBoleta> obtener(Long id) {
-        return repository.findById(id);
+    public DetalleBoleta obtener(Long id) {
+        return repository.findById(id).orElse(null);
     }
+
+
 
     @Override
     public void borrar(Long id) {

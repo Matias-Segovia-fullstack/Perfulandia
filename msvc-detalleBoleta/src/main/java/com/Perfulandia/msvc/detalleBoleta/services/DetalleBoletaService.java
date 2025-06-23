@@ -9,7 +9,7 @@ public interface DetalleBoletaService {
     List<DetalleBoleta> findAll();
     DetalleBoleta guardar(DetalleBoleta detalle);
     List<DetalleBoleta> listarPorBoleta(Long idBoleta);
-    Optional<DetalleBoleta> obtener(Long id);
+    DetalleBoleta obtener(Long id);
     void borrar(Long id);
     DetalleBoleta actualizar(Long id, DetalleBoleta nuevoDetalle);
 }

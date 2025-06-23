@@ -168,9 +168,12 @@ class DetalleBoletaServiceTest {
     void shouldThrowExceptionWhenFindingNonexistentDetalle() {
         when(repository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.obtener(999L).orElseThrow(
-                () -> new DetalleBoletaException("Detalle con id 999 no existe")))
-                .isInstanceOf(DetalleBoletaException.class)
+        assertThatThrownBy(() -> {
+            DetalleBoleta detalle = service.obtener(999L);
+            if (detalle == null) {
+                throw new DetalleBoletaException("Detalle con id 999 no existe");
+            }
+        }).isInstanceOf(DetalleBoletaException.class)
                 .hasMessageContaining("no existe");
 
         verify(repository).findById(999L);
