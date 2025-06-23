@@ -4,15 +4,22 @@ package com.Perfulandia.msvc.inventario.controllers;
 import com.Perfulandia.msvc.inventario.assemblers.InventarioModelAssembler;
 import com.Perfulandia.msvc.inventario.models.entities.Inventario;
 import com.Perfulandia.msvc.inventario.services.InventarioService;
+import com.Perfulandia.msvc.producto.controllers.ProductoControllerV2;
+import com.Perfulandia.msvc.producto.models.entities.Producto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v2/inventarios")
@@ -27,36 +34,85 @@ public class InventarioControllerV2 {
     private InventarioModelAssembler inventarioModelAssembler;
 
     @GetMapping
-    public ResponseEntity<List<Inventario>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findAll());
+    public ResponseEntity<CollectionModel<EntityModel<Inventario>>> findAll() {
+        List<EntityModel<Inventario>> entityModels = this.inventarioService.findAll()
+                .stream()
+                .map(inventarioModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Inventario>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(InventarioControllerV2.class).findAll()).withSelfRel()
+
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventario> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findById(id));
+    public ResponseEntity<EntityModel<Inventario>> findById(@PathVariable Long id) {
+        EntityModel<Inventario> entityModel = this.inventarioModelAssembler.toModel(
+                this.inventarioService.findById(id)
+        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(entityModel);
     }
 
     @PostMapping
-    public ResponseEntity<Inventario> save(@Valid @RequestBody Inventario inventario){
-        return ResponseEntity.status(HttpStatus.CREATED).body(inventarioService.save(inventario));
+    public ResponseEntity<EntityModel<Inventario>>  create(@Valid @RequestBody Inventario inventario) {
+        Inventario inventarioNuevo = this.inventarioService.save(inventario);
+        EntityModel<Inventario> entityModel = this.inventarioModelAssembler.toModel(inventarioNuevo);
+
+        return ResponseEntity
+                .created(linkTo(methodOn(InventarioControllerV2.class).findById(inventarioNuevo.getIdInventario())).toUri())
+                .body(entityModel);
     }
 
     @GetMapping("/sucursal/{id}")
-    public ResponseEntity<List<Inventario>> findByIdSucursal(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findByIdSucursal(id));
+    public ResponseEntity<CollectionModel<EntityModel<Inventario>>> findByIdSucursal(@PathVariable("id") Long id) {
+        List<Inventario> inventarios = inventarioService.findByIdSucursal(id);
+
+        List<EntityModel<Inventario>> entityModel = inventarios
+                .stream()
+                .map(inventarioModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Inventario>> collectionModel = CollectionModel.of(entityModel);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
     @GetMapping("/producto/{id}")
-    public ResponseEntity<List<Inventario>> findByIdProducto(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findByIdProducto(id));
+    public ResponseEntity<CollectionModel<EntityModel<Inventario>>> findByIdProducto(@PathVariable("id") Long id) {
+        List<Inventario> inventarios = inventarioService.findByIdProducto(id);
+
+        List<EntityModel<Inventario>> entityModel = inventarios.stream()
+                .map(inventarioModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Inventario>> collectionModel = CollectionModel.of(entityModel);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
     @GetMapping("/sucursal/{idSucursal}/producto/{idProducto}")
-    public ResponseEntity<Inventario> findByProductAndSucursal(
+    public ResponseEntity<EntityModel<Inventario>> findByProductAndSucursal(
             @PathVariable("idSucursal") Long idSucursal,
             @PathVariable("idProducto") Long idProducto) {
-        return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findByProductoAndSucursal(idSucursal, idProducto));
+        Inventario inventario = inventarioService.findByProductoAndSucursal(idSucursal, idProducto);
+
+        EntityModel<Inventario> entityModel = inventarioModelAssembler.toModel(inventario);
+
+        return ResponseEntity.status(HttpStatus.OK).body(entityModel);
     }
+
 
     @PutMapping("/sucursal/{idSucursal}/producto/{idProducto}")
     public ResponseEntity<Inventario> actualizarStock(

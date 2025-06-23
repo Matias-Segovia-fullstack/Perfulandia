@@ -6,12 +6,17 @@ import com.Perfulandia.msvc.producto.services.ProductoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v2/productos")
@@ -26,26 +31,55 @@ public class ProductoControllerV2 {
     private ProductoModelAssembler productoModelAssembler;
 
     @GetMapping
-    public ResponseEntity<List<Producto>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(productoService.findAll());
+    public ResponseEntity<CollectionModel<EntityModel<Producto>>> findAll() {
+        List<EntityModel<Producto>> entityModels = this.productoService.findAll()
+                .stream()
+                .map(productoModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Producto>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(ProductoControllerV2.class).findAll()).withSelfRel()
+
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> findById(@PathVariable("id") Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(productoService.findById(id));
+    public ResponseEntity<EntityModel<Producto>> findById(@PathVariable Long id) {
+        EntityModel<Producto> entityModel = this.productoModelAssembler.toModel(
+                this.productoService.findById(id)
+        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(entityModel);
     }
 
 
     @PostMapping
-    public ResponseEntity<Producto> save(@Valid @RequestBody Producto producto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoService.save(producto));
+    public ResponseEntity<EntityModel<Producto>>  create(@Valid @RequestBody Producto producto) {
+        Producto productoNuevo = this.productoService.save(producto);
+        EntityModel<Producto> entityModel = this.productoModelAssembler.toModel(productoNuevo);
+
+        return ResponseEntity
+                .created(linkTo(methodOn(ProductoControllerV2.class).findById(productoNuevo.getIdProducto())).toUri())
+                .body(entityModel);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizar(@PathVariable Long id, @RequestBody Producto nuevoProducto){
-        Producto productoActualizado = productoService.actualizar(id, nuevoProducto);
-        return ResponseEntity.ok(productoActualizado);
+    public ResponseEntity<EntityModel<Producto>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody Producto productoNuevo
+    ) {
+        Producto productoActualizado = this.productoService.actualizar(id, productoNuevo);
+        EntityModel<Producto> entityModel = this.productoModelAssembler.toModel(productoActualizado);
+
+        return ResponseEntity
+                .ok(entityModel);
     }
 
     @DeleteMapping("/{id}")

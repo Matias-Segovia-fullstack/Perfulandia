@@ -6,12 +6,17 @@ import com.Perfulandia.msvc.sucursal.services.SucursalService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v2/sucursales")
@@ -26,26 +31,55 @@ public class SucursalControllerV2 {
     private SucursalModelAssembler sucursalModelAssembler;
 
     @GetMapping
-    public ResponseEntity<List<Sucursal>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(sucursalService.findAll());
+    public ResponseEntity<CollectionModel<EntityModel<Sucursal>>> findAll() {
+        List<EntityModel<Sucursal>> entityModels = this.sucursalService.findAll()
+                .stream()
+                .map(sucursalModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Sucursal>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(SucursalControllerV2.class).findAll()).withSelfRel()
+
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(collectionModel);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sucursal> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(sucursalService.findById(id));
+    public ResponseEntity<EntityModel<Sucursal>> findById(@PathVariable Long id) {
+        EntityModel<Sucursal> entityModel = this.sucursalModelAssembler.toModel(
+                this.sucursalService.findById(id)
+        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(entityModel);
     }
 
 
     @PostMapping
-    public ResponseEntity<Sucursal> save(@Valid @RequestBody Sucursal sucursal){
-        return ResponseEntity.status(HttpStatus.CREATED).body(sucursalService.save(sucursal));
+    public ResponseEntity<EntityModel<Sucursal>>  create(@Valid @RequestBody Sucursal sucursal) {
+        Sucursal sucuersalNueva = this.sucursalService.save(sucursal);
+        EntityModel<Sucursal> entityModel = this.sucursalModelAssembler.toModel(sucuersalNueva);
+
+        return ResponseEntity
+                .created(linkTo(methodOn(SucursalControllerV2.class).findById(sucuersalNueva.getIdSucursal())).toUri())
+                .body(entityModel);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Sucursal> actualizar(@PathVariable Long id, @RequestBody Sucursal nuevaSucursal){
-        Sucursal sucursalActualizada = sucursalService.actualizar(id, nuevaSucursal);
-        return ResponseEntity.ok(sucursalActualizada);
+    public ResponseEntity<EntityModel<Sucursal>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody Sucursal sucursalNueva
+    ) {
+        Sucursal sucursalActualizada = this.sucursalService.actualizar(id, sucursalNueva);
+        EntityModel<Sucursal> entityModel = this.sucursalModelAssembler.toModel(sucursalActualizada);
+
+        return ResponseEntity
+                .ok(entityModel);
     }
 
     @DeleteMapping("/{id}")

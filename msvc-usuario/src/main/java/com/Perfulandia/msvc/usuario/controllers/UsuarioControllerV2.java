@@ -62,12 +62,12 @@ public class UsuarioControllerV2 {
 
 
     @PostMapping
-    public ResponseEntity<EntityModel<Usuario>>  create(@Valid @RequestBody Usuario medico) {
-        Usuario medicoNew = this.usuarioService.save(medico);
-        EntityModel<Usuario> entityModel = this.usuarioModelAssembler.toModel(medicoNew);
+    public ResponseEntity<EntityModel<Usuario>>  create(@Valid @RequestBody Usuario usuario) {
+        Usuario usuarioNuevo = this.usuarioService.save(usuario);
+        EntityModel<Usuario> entityModel = this.usuarioModelAssembler.toModel(usuarioNuevo);
 
         return ResponseEntity
-                .created(linkTo(methodOn(UsuarioControllerV2.class).findById(medicoNew.getIdUsuario())).toUri())
+                .created(linkTo(methodOn(UsuarioControllerV2.class).findById(usuarioNuevo.getIdUsuario())).toUri())
                 .body(entityModel);
     }
 
