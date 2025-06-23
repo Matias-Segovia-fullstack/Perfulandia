@@ -18,17 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.Array;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
@@ -57,7 +46,7 @@ public class InventarioServiceTest {
 
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         productoTest = new ProductoDTO(
                 1L, "Perfume Hombre", 49990
         );
@@ -72,7 +61,7 @@ public class InventarioServiceTest {
 
     @Test
     @DisplayName("Debe Crear Inventario")
-    public void shouldCreateInventario(){
+    public void shouldCreateInventario() {
         when(productoClient.obtenerProducto(1L)).thenReturn(this.productoTest);
         when(sucursalClient.obtenerSucursal(1L)).thenReturn((this.sucursalTest));
         when(inventarioRepository.save(any(Inventario.class))).thenReturn(this.inventarioTest);
@@ -89,7 +78,7 @@ public class InventarioServiceTest {
 
     @Test
     @DisplayName("Listar todos los inventarios")
-    public void shouldListarInventarios(){
+    public void shouldListarInventarios() {
         List<Inventario> inventarios = Arrays.asList(this.inventarioTest);
 
         when(inventarioRepository.findAll()).thenReturn(inventarios);
@@ -99,6 +88,99 @@ public class InventarioServiceTest {
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
         assertThat(result).contains(this.inventarioTest);
+
+        verify(inventarioRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Buscar por id")
+    public void shouldBuscarInventarioPorId(){
+        when(inventarioRepository.findById(1L)).thenReturn(Optional.of(this.inventarioTest));
+
+        Inventario result = inventarioService.findById(1L);
+
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(inventarioTest);
+
+        verify(inventarioRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Buscar por id sucursal")
+    public void shouldBuscarPorIdSucursal(){
+        List<Inventario> inventarios = Arrays.asList(this.inventarioTest);
+
+        when(inventarioRepository.findByIdSucursal(1L)).thenReturn(inventarios);
+
+        List<Inventario> result = inventarioService.findByIdSucursal(1L);
+
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(1);
+        assertThat(result).contains(this.inventarioTest);
+
+        verify(inventarioRepository, times(1)).findByIdSucursal(1L);
+    }
+
+    @Test
+    @DisplayName("Buscar por id producto")
+    public void shouldBuscarPorIdProducto(){
+        List<Inventario> inventarios = Arrays.asList(this.inventarioTest);
+
+        when(inventarioRepository.findByIdProducto(1L)).thenReturn(inventarios);
+
+        List<Inventario> result = inventarioService.findByIdProducto(1L);
+
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(1);
+        assertThat(result).contains(this.inventarioTest);
+
+        verify(inventarioRepository, times(1)).findByIdProducto(1L);
+    }
+
+    @Test
+    @DisplayName("Buscar inventario por producto y sucursal")
+    public void shouldFindInventarioByProductoAndSucursal() {
+        when(inventarioRepository.findByIdProductoAndIdSucursal(1L, 1L))
+                .thenReturn(Collections.singletonList(this.inventarioTest));
+
+        Inventario result = inventarioService.findByProductoAndSucursal(1L, 1L);
+
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(this.inventarioTest);
+
+        verify(inventarioRepository, times(1)).findByIdProductoAndIdSucursal(1L, 1L);
+    }
+
+    @Test
+    @DisplayName("Actualizar stock de inventario")
+    public void shouldActualizarStock() {
+        when(inventarioRepository.findByIdProductoAndIdSucursal(1L, 1L))
+                .thenReturn(Collections.singletonList(this.inventarioTest));
+        when(inventarioRepository.save(any(Inventario.class))).thenReturn(this.inventarioTest);
+
+        Integer nuevoStock = 25;
+
+        Inventario result = inventarioService.actualizarStock(1L, 1L, nuevoStock);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getStockActual()).isEqualTo(nuevoStock);
+
+        verify(inventarioRepository, times(1))
+                .findByIdProductoAndIdSucursal(1L, 1L);
+        verify(inventarioRepository, times(1)).save(any(Inventario.class));
+    }
+
+    @Test
+    @DisplayName("Borrar inventario")
+    public void shouldBorrarInventario(){
+        when(inventarioRepository.findById(1L)).thenReturn(Optional.of(inventarioTest));
+
+        inventarioService.borrar(1L);
+
+        verify(inventarioRepository).findById(1L);
+        verify(inventarioRepository).deleteById(1L);
     }
 
 }
+
+
